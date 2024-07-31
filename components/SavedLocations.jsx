@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeSavedLocation, setDestination, setRadius } from '@/store/slices/locationSlice';
+import { removeSavedLocation, setSavedLocations, addSavedLocation } from '@/store/slices/locationSlice';
 import { toast } from 'react-toastify';
+import { useClerk, useUser } from '@clerk/clerk-react';
 import LocationCard from './LocationCard';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -9,6 +10,32 @@ const SavedLocations = () => {
   const savedLocations = useSelector((state) => state.locations.savedLocations);
   const dispatch = useDispatch();
   let deletedLocation = null;
+  
+  const { user } = useUser(); // Get the current user from Clerk
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      if (user && user.emailAddresses && user.emailAddresses[0]) {
+        const email = user.emailAddresses[0].emailAddress;
+        try {
+          const response = await fetch('/api/locations', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }), // Pass the user's email in the request body
+          });
+          const data = await response.json();
+          dispatch(setSavedLocations(data));
+        } catch (error) {
+          console.error('Error fetching locations:', error);
+          toast.error('Failed to fetch saved locations.');
+        }
+      }
+    };
+
+    fetchLocations();
+  }, [dispatch, user]);
 
   const handleRemoveLocation = (id) => {
     const locationToRemove = savedLocations.find((loc) => loc.id === id);

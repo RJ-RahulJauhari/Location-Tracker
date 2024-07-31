@@ -2,16 +2,11 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const locationSchema = new Schema({
-    name: String,
-    coordinates: [Number],
-    radius: Number,
-});
-
 const userSchema = new Schema({
-    name: String,
-    email: String,
-    savedLocations: [locationSchema],
-});
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ }, // Email format validation
+}, { timestamps: true }); // Adds createdAt and updatedAt fields
 
-export default mongoose.models.User || mongoose.model('User', userSchema);
+console.log('User model schema defined');
+
+export default mongoose.model('User', userSchema);

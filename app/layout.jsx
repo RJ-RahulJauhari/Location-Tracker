@@ -1,12 +1,10 @@
 "use client"
-
 import { Roboto } from "next/font/google";
 import {ClerkProvider,} from '@clerk/nextjs'
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { store } from "@/store/store";
 import { Provider } from 'react-redux';
-import { useState, useEffect } from 'react';
 
 const roboto = Roboto({
   weight: "500",

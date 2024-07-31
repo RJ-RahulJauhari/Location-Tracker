@@ -29,9 +29,12 @@ const locationSlice = createSlice({
                 (location) => location.id !== action.payload
             );
         },
+        setSavedLocations: (state, action) => {
+            state.savedLocations = action.payload;
+        },
     },
 });
 
-export const { setCurrentLocation, setDestination, setRadius, addSavedLocation, removeSavedLocation } = locationSlice.actions;
+export const { setCurrentLocation, setDestination, setRadius, addSavedLocation, removeSavedLocation, setSavedLocations } = locationSlice.actions;
 
 export default locationSlice.reducer;

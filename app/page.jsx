@@ -1,37 +1,23 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SignIn } from "@clerk/clerk-react"; // Ensure correct import
-import { SignUp } from "@clerk/clerk-react"; // Ensure correct import
+import { SignIn, useClerk } from "@clerk/clerk-react";
+import { SignUp } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useClerk } from "@clerk/clerk-react";
 
 export default function Home() {
   const router = useRouter();
-  const { user } = useClerk();
+  const { user } = useClerk(); // Make sure this returns the logged-in user
   const [activeTab, setActiveTab] = useState('sign-in');
 
-  const handleSignInSuccess = async (event) => {
+  // Handle sign-in success
+  const handleSignInSuccess = () => {
     if (user) {
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: user.fullName,
-          email: user.primaryEmailAddress.emailAddress,
-          savedLocations: [],
-        }),
-      });
-
-      if (response.ok) {
-        
-        router.push('/home');
-      } else {
-        console.error('Failed to save user data');
-      }
+      console.log('User object:', user); // Log the user object
+      router.push('/check-user'); // Navigate to the route where you handle the user data
+    } else {
+      console.error('User object is undefined or null');
     }
   };
 
