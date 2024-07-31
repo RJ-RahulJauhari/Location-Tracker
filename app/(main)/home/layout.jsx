@@ -4,23 +4,23 @@ import "../../../app/globals.css";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 
-
 import { useState, useEffect } from "react";
-
-
 
 export default function HomeLayout({ children }) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768); // Adjust the breakpoint as needed
-    };
+    // Check if window is defined (ensuring code runs only on the client side)
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768); // Adjust the breakpoint as needed
+      };
 
-    window.addEventListener("resize", handleResize);
-    handleResize(); // Check on initial load
+      window.addEventListener("resize", handleResize);
+      handleResize(); // Check on initial load
 
-    return () => window.removeEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   return (
@@ -34,9 +34,11 @@ export default function HomeLayout({ children }) {
         <Navbar />
         <div className="w-full h-full">
           {children}
-          <div className="py-2 px-2 sm:hidden">
-            <Sidebar />
-          </div>
+          {isMobile && (
+            <div className="py-2 px-2 sm:hidden">
+              <Sidebar />
+            </div>
+          )}
         </div>
       </div>
     </div>
