@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeSavedLocation, setSavedLocations, addSavedLocation } from '@/store/slices/locationSlice';
