@@ -7,38 +7,40 @@ import HomePage from '@/pages/HomePage';
 const Page = () => {
   const { user } = useClerk();
 
-  useEffect(() => {
-    const checkUserAndSave = async () => {
-      if (user) {
-        try {
-          console.log('User exists:', user);
-          const response = await fetch('/api/user', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: user.fullName ,
-              email: user.primaryEmailAddress?.emailAddress
-            }),
-          });
+  // useEffect(() => {
+  //   const checkUserAndSave = async () => {
+  //     if (user) {
+  //       try {
+  //         console.log('User exists:', user);
+  //         const response = await fetch('/api/user', {
+  //           method: 'POST',
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //           body: JSON.stringify({
+  //             name: user.fullName ,
+  //             email: user.primaryEmailAddress?.emailAddress
+  //           }),
+  //         });
 
-          if (response.ok) {
-            console.log('User data saved successfully');
-          } else {
-            const errorData = await response.json();
-            console.error('Failed to save user data:', errorData);
-          }
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      } else {
-        console.log('No user is authenticated');
-      }
-    };
+  //         if (response.ok) {
+  //           console.log('User data saved successfully');
+  //         } else {
+  //           const errorData = await response.json();
+  //           console.error('Failed to save user data:', errorData);
+  //         }
+  //       } catch (error) {
+  //         console.error('Error:', error);
+  //       }
+  //     } else {
+  //       console.log('No user is authenticated');
+  //     }
+  //   };
 
-    checkUserAndSave();
-  }, [user]);
+  //   checkUserAndSave();
+  // }, [user]);
+
+  
 
   return (
     <div className="w-full h-3/4 sm:h-full">

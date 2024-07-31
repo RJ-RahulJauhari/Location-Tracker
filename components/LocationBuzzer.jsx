@@ -1,11 +1,11 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setRadius, setDestination, addSavedLocation } from "@/store/slices/locationSlice";
 import { Slider } from "@/components/ui/slider";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from 'axios';
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -20,6 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useUser } from "@clerk/nextjs";
 
 const LocationBuzzer = () => {
   const radius = useSelector((state) => state.locations.radius);
@@ -32,6 +33,8 @@ const LocationBuzzer = () => {
   const [inDestination, setInDestination] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [locationName, setLocationName] = useState("");
+  const user = useUser().user;
+  console.log("Email: ",user.primaryEmailAddress.emailAddress)
 
   useEffect(() => {
     setInputRadius(radius);
@@ -87,13 +90,31 @@ const LocationBuzzer = () => {
     toast.info(buzzerActive ? "Buzzer stopped." : "Buzzer started.");
   };
 
-  const handleSaveLocation = () => {
+  const handleSaveLocation = async () => {
     if (destination && locationName) {
       dispatch(addSavedLocation({
         name: locationName,
         coordinates: destination,
         radius: inputRadius,
       }));
+
+      const location = JSON.stringify({
+        name: locationName,
+        coordinates: destination,
+        radius: inputRadius,
+        email: user.primaryEmailAddress.emailAddress
+      });
+
+      const data = await axios.post('/api/locations',location)
+        .then((res) => {
+          if(res){
+            console.log(res.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       setLocationName("");
       setPopoverOpen(false);
       toast.success("Location saved successfully!");
@@ -101,6 +122,8 @@ const LocationBuzzer = () => {
       toast.error("Please enter a name for the location.");
     }
   };
+
+  
 
   const handleSelectChange = (value) => {
     const selectedLocation = savedLocations.find((loc) => loc.name === value);
