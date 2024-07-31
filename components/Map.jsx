@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -7,7 +5,7 @@ import L from 'leaflet';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentLocation, setDestination } from '@/store/slices/locationSlice';
 
-const Map = () => {
+const MapComponent = () => {
     const currentLocation = useSelector((state) => state.locations.currentLocation);
     const destination = useSelector((state) => state.locations.destination);
     const radius = useSelector((state) => state.locations.radius);
@@ -25,7 +23,6 @@ const Map = () => {
                     dispatch(setCurrentLocation(newPosition));
                     console.log("Current Position of User:", "Latitude:", newPosition[0], "Longitude", newPosition[1]);
 
-                    // Check if the user has moved significantly
                     if (lastPosition) {
                         const [lastLat, lastLng] = lastPosition;
                         const [newLat, newLng] = newPosition;
@@ -58,9 +55,8 @@ const Map = () => {
         const intervalId = setInterval(() => {
             updateLocation();
             lastUpdateTimestamp = Date.now();
-        }, updateInterval); // Update every `updateInterval` milliseconds
+        }, updateInterval);
 
-        // Initial update
         updateLocation();
 
         return () => clearInterval(intervalId);
@@ -158,4 +154,4 @@ const MapCenterUpdater = ({ position }) => {
     return null;
 };
 
-export default Map;
+export default MapComponent;
