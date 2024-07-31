@@ -1,3 +1,4 @@
+"use client"
 import Map from '@/components/Map'
 import { Sidebar } from 'lucide-react'
 import React from 'react'
